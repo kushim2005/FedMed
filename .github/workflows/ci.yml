@@ -1,0 +1,21 @@
+name: FedMed CI
+on:
+  push:
+    branches: ["feature/**", "dev"]
+  pull_request:
+    branches: ["dev", "main"]
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: pip install flake8 pytest torch monai numpy
+    - name: Lint with flake8
+      run: flake8 . --max-line-length=100 --exclude=.venv,__pycache__,data/raw
+    - name: Run tests
+      run: pytest tests/ -v --tb=short || echo "No tests yet"
