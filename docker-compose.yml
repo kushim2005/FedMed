@@ -1,0 +1,92 @@
+version: "3.9"
+
+services:
+  # ─────────────────────────────────────
+  # FL Server — Central Aggregation Hub
+  # ─────────────────────────────────────
+  fl-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fedmed-server
+    command: python server/fl_server.py
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - fedmed-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost',8080))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────
+  # Hospital Node A — Port 8081
+  # ─────────────────────────────────────
+  hospital-node-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fedmed-hospital-1
+    command: python client/fl_client.py --hospital-id 1 --server fl-server:8080
+    volumes:
+      - ./data/raw:/app/data/raw:ro   # Read-only mount — data never leaves
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HOSPITAL_ID=1
+    depends_on:
+      fl-server:
+        condition: service_healthy
+    networks:
+      - fedmed-network
+
+  # ─────────────────────────────────────
+  # Hospital Node B — Port 8082
+  # ─────────────────────────────────────
+  hospital-node-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fedmed-hospital-2
+    command: python client/fl_client.py --hospital-id 2 --server fl-server:8080
+    volumes:
+      - ./data/raw:/app/data/raw:ro
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HOSPITAL_ID=2
+    depends_on:
+      fl-server:
+        condition: service_healthy
+    networks:
+      - fedmed-network
+
+  # ─────────────────────────────────────
+  # Hospital Node C — Port 8083
+  # ─────────────────────────────────────
+  hospital-node-3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fedmed-hospital-3
+    command: python client/fl_client.py --hospital-id 3 --server fl-server:8080
+    volumes:
+      - ./data/raw:/app/data/raw:ro
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HOSPITAL_ID=3
+    depends_on:
+      fl-server:
+        condition: service_healthy
+    networks:
+      - fedmed-network
+
+networks:
+  fedmed-network:
+    driver: bridge

@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+env/
+venv/
+dist/
+build/
+*.pyc
+
+# Data - NEVER commit raw MRI data
+data/raw/
+data/brats/
+*.nii
+*.nii.gz
+*.dcm
+*.tar
+*.zip
+
+# Model checkpoints - too large for GitHub
+*.pth
+*.ckpt
+*.pt
+checkpoints/
+
+# Logs
+logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Secrets
+.env
+*.key
