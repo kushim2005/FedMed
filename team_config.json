@@ -1,0 +1,56 @@
+{
+  "project": "FedMed",
+  "github_repo": "https://github.com/Ravi-attada/FedMed",
+  "members": [
+    {
+      "id": 1,
+      "name": "Chaitanya",
+      "github": "chaitanya2424",
+      "email": "chaitanya2424@github.com",
+      "role": "ML Lead",
+      "track": "PPML Engineering",
+      "branch": "feature/chaitanya/unet-architecture",
+      "files": ["model/unet3d.py", "train/train_centralized.py"]
+    },
+    {
+      "id": 2,
+      "name": "Ranjith",
+      "github": "Ranjith-Kumar725",
+      "email": "ranjith-kumar725@github.com",
+      "role": "ML Engineer",
+      "track": "PPML Engineering",
+      "branch": "feature/ranjith/data-preprocessing",
+      "files": ["data/preprocess.py", "data/dataset.py", "eval/metrics.py"]
+    },
+    {
+      "id": 3,
+      "name": "Kushi",
+      "github": "kushim2005",
+      "email": "kushim2005@github.com",
+      "role": "FL Systems Lead",
+      "track": "Distributed Systems",
+      "branch": "feature/kushi/fl-server",
+      "files": ["server/fl_server.py"]
+    },
+    {
+      "id": 4,
+      "name": "VasuSree",
+      "github": "Vasusree-Boddapu",
+      "email": "vasusree-boddapu@github.com",
+      "role": "Backend/DevOps",
+      "track": "Distributed Systems",
+      "branch": "feature/vasusree/hospital-nodes",
+      "files": ["client/fl_client.py", "docker-compose.yml", "Dockerfile"]
+    },
+    {
+      "id": 5,
+      "name": "Ravi",
+      "github": "Ravi-attada",
+      "email": "ravi-attada@github.com",
+      "role": "Integration & QA",
+      "track": "Both",
+      "branch": "feature/ravi/integration",
+      "files": ["demo/week1_demo.py", "utils/logger.py", "requirements.txt", "README.md", ".github/workflows/ci.yml"]
+    }
+  ]
+}
