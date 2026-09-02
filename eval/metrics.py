@@ -1,4 +1,4 @@
-"""
+﻿"""
 Member 2 - Ranjith (ML Engineer)
 Task: Segmentation Metrics - Dice Score and Hausdorff Distance
 """
@@ -18,13 +18,13 @@ class SegmentationEvaluator:
         self.dice_metric = DiceMetric(include_background=False,
                                       reduction=MetricReduction.MEAN_BATCH, get_not_nans=True)
         self.hd95_metric = HausdorffDistanceMetric(include_background=False,
-                                                    percentile=95, reduction=MetricReduction.MEAN_BATCH)
+                                                   percentile=95, reduction=MetricReduction.MEAN_BATCH)
         self.post_pred = AsDiscrete(argmax=True, to_onehot=num_classes)
         self.post_label = AsDiscrete(to_onehot=num_classes)
 
     def update(self, outputs, labels):
         op = torch.stack([self.post_pred(o) for o in outputs])
-        lp = torch.stack([self.post_label(l) for l in labels])
+        lp = torch.stack([self.post_label(lbl) for lbl in labels])
         self.dice_metric(y_pred=op, y=lp)
         self.hd95_metric(y_pred=op, y=lp)
 
@@ -50,7 +50,7 @@ def compute_dice_score(outputs, labels):
     post_label = AsDiscrete(to_onehot=4)
     metric = DiceMetric(include_background=False, reduction=MetricReduction.MEAN)
     metric(y_pred=torch.stack([post_pred(o) for o in outputs]),
-           y=torch.stack([post_label(l) for l in labels]))
+           y=torch.stack([post_label(lbl) for lbl in labels]))
     result, _ = metric.aggregate()
     return result.item()
 
