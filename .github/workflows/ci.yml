@@ -1,4 +1,4 @@
-﻿name: FedMed CI
+name: FedMed CI
 
 on:
   push:
