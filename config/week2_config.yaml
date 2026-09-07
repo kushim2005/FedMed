@@ -1,0 +1,52 @@
+# FedMed Week 2 Configuration
+# Privacy-Preserving Federated Learning for Medical Imaging
+
+project:
+  name: "FedMed"
+  week: 2
+  domain: "Privacy-Preserving Machine Learning & Healthcare"
+  task: "3D Brain Tumor Segmentation (BraTS 2021)"
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  health_port: 8090
+  strategy: "fedprox"
+  proximal_mu: 0.1
+  num_rounds: 10
+  min_fit_clients: 2
+  min_available_clients: 2
+  fraction_fit: 1.0
+  checkpoint_dir: "checkpoints"
+  checkpoint_interval: 5
+
+clients:
+  num_clients: 3
+  hospitals:
+    - id: 1
+      name: "Hospital-A (AIIMS New Delhi)"
+      port: 8081
+    - id: 2
+      name: "Hospital-B (Mayo Clinic)"
+      port: 8082
+    - id: 3
+      name: "Hospital-C (NHS Trust London)"
+      port: 8083
+  local_epochs: 1
+  batch_size: 1
+  learning_rate: 0.0001
+  num_workers: 2
+
+data:
+  dataset: "BraTS 2021"
+  data_dir: "dataset/BraTS2021"
+  dirichlet_alpha: 0.8
+  partition_seed: 42
+  modalities: ["t1", "t1ce", "t2", "flair"]
+  classes: ["Background", "NCR", "ED", "ET"]
+
+security:
+  tls_enabled: true
+  certs_dir: "security/certs"
+  ca_validity_days: 3650
+  cert_validity_days: 365
