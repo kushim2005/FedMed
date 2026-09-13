@@ -10,6 +10,7 @@ from monai.transforms import (
     CropForegroundd, RandSpatialCropd, RandFlipd,
     NormalizeIntensityd, RandScaleIntensityd,
     RandShiftIntensityd, Orientationd, Spacingd, ToTensord,
+    ConcatItemsd,
 )
 
 MODALITY_KEYS = ['t1', 't1ce', 't2', 'flair']
@@ -33,7 +34,8 @@ def get_train_transforms():
         NormalizeIntensityd(keys=MODALITY_KEYS, nonzero=True, channel_wise=True),
         RandScaleIntensityd(keys=MODALITY_KEYS, factors=0.1, prob=0.5),
         RandShiftIntensityd(keys=MODALITY_KEYS, offsets=0.1, prob=0.5),
-        ToTensord(keys=ALL_KEYS),
+        ConcatItemsd(keys=MODALITY_KEYS, name='image'),
+        ToTensord(keys=ALL_KEYS + ['image']),
     ])
 
 
@@ -47,7 +49,8 @@ def get_val_transforms():
         Spacingd(keys=ALL_KEYS, pixdim=(1.0, 1.0, 1.0),
                  mode=('bilinear', 'bilinear', 'bilinear', 'bilinear', 'nearest')),
         NormalizeIntensityd(keys=MODALITY_KEYS, nonzero=True, channel_wise=True),
-        ToTensord(keys=ALL_KEYS),
+        ConcatItemsd(keys=MODALITY_KEYS, name='image'),
+        ToTensord(keys=ALL_KEYS + ['image']),
     ])
 
 
@@ -56,7 +59,7 @@ def get_data_dicts(data_dir, split='train', hospital_id=None, num_hospitals=3):
     data_dir = Path(data_dir)
     if not data_dir.exists():
         raise FileNotFoundError(f'BraTS data not found at {data_dir}.')
-    patient_dirs = sorted([d for d in data_dir.iterdir() if d.is_dir()])
+    patient_dirs = sorted([d for d in data_dir.iterdir() if d.is_dir() and d.name.startswith('BraTS')])
     split_idx = int(len(patient_dirs) * 0.8)
     patients = patient_dirs[:split_idx] if split == 'train' else patient_dirs[split_idx:]
     if hospital_id is not None:
