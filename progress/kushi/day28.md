@@ -1,16 +1,30 @@
-﻿# Kushi Day 28 - chore(release): Week 2 FL server complete — final commit
+﻿# Day 28 — Sept 23 | Kushi | FL Systems
 
-## Tasks Completed
-* Final commit: `server/fl_server_v2.py`, `security/generate_certs.py`, `security/tls_config.py`.
-* 10-round TLS FL simulation: FedProx Dice = 0.693 confirmed reproducible.
-* Shared final server demo script with team for mid-project presentation.
+## Focus: Week 2 Complete + HE Architecture Design (Week 3 Kickoff)
 
-## Files Modified/Created
-* `server/fl_server_v2.py` — v2 final
-* `security/` — all cert utilities finalized
+### Tasks Completed
+- Confirmed Week 2 FL pipeline stable: TLS gRPC, FedProx (mu=0.01), checkpointing
+- Week 3 HE architecture design session with team:
+  - Selected CKKS scheme over BFV/BGV (supports approximate floats, ideal for weights)
+  - Decided key distribution: server generates context, sends public key to clients
+  - Aggregation protocol: server aggregates OVER ciphertexts (never decrypts raw weights)
+  - Secret key stays at trusted coordinator only — never transmitted
+- Designed CKKS context parameters for FedMed:
+  - poly_mod_degree = 8192 (128-bit security)
+  - coeff_mod_bit_sizes = [60, 40, 40, 60]
+  - global_scale = 2^40
+- Created `encryption/` folder structure skeleton
+- Assigned team tasks:
+  - Kushi: tenseal_context.py + fl_server_v3.py
+  - Ravi: he_aggregator.py + fl_client_v3.py
+  - Chaitanya: profiling + gradient compatibility
+  - Ranjith: test suite
+  - Vasu: Docker + containers
 
-## Notes & Challenges
-* Week 3 will extend this with TenSEAL: encrypted weights sent over the same TLS channel.
+### Security Guarantee
+- IND-CPA secure under RLWE assumption
+- 128-bit classical security level
+- Server learns nothing about individual client weights
 
-## Tomorrow's Plan
-* Begin Week 3: TenSEAL homomorphic encryption on client weight updates.
+### Tomorrow
+- Implement encryption/tenseal_context.py
