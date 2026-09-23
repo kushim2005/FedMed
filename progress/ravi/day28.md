@@ -1,16 +1,33 @@
-﻿# Ravi Day 28 - chore(release): Week 2 complete — final commit and documentation
+﻿# Day 28 — Sept 23 | Ravi | Integration Lead
 
-## Tasks Completed
-* Final commit: all Week 2 data pipeline files merged to main.
-* Updated project wiki with Week 2 achievements: Dirichlet partitioner, config YAML, integration tests.
-* 10-round FL simulation result: global Dice = 0.69 (federated) vs 0.72 (centralized) — 4.2% gap.
+## Focus: Week 2 Final Review + Week 3 Integration Architecture
 
-## Files Modified/Created
-* `docs/week2_summary.md` — Week 2 final summary
-* `README.md` — badges updated with Week 2 status
+### Tasks Completed
+- Completed Week 2 integration review:
+  - fl_server_v2 + fl_client_v2 end-to-end: 10 rounds, 3 hospitals, Dice 0.712
+  - All TLS certificates valid, gRPC connections stable
+  - FedProx mu=0.01 optimal for AIIMS/Mayo/NHS heterogeneity (alpha=0.8)
+  - CI: lint + structure + syntax all passing on latest main commit
+- Week 3 integration design:
+  - Designed he_aggregator.py API:
+    ```python
+    aggregate_encrypted_weights(
+        ciphertext_list: List[bytes],
+        weights: List[float],
+        context: ts.Context
+    ) -> bytes  # serialized aggregated ciphertext
+    ```
+  - Designed fl_client_v3 weight flow:
+    state_dict → sorted numpy vectors → CKKS ciphertexts → base64 bytes → Flower NDArray
+  - Reviewed Flower FitRes format for ciphertext transport compatibility
+- Coordinated with Kushi on CKKS context parameter selection
+- Drafted week3_demo.py structure
 
-## Notes & Challenges
-* 4.2% federated gap is expected; Week 3 TenSEAL encryption will close it further.
+### Integration Challenge Identified
+- Flower expects numpy arrays in FitRes — need base64 encoding bridge for ciphertexts
+- Solution: each ciphertext → base64 str → np.frombuffer(bytes, dtype=np.uint8)
+- Server reverses: NDArray → bytes → ts.CKKSVector.load(context, bytes)
 
-## Tomorrow's Plan
-* Begin Week 3: TenSEAL homomorphic encryption integration.
+### Tomorrow
+- Begin implementation of encryption/he_aggregator.py
+- Begin client/fl_client_v3.py skeleton
