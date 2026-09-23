@@ -77,7 +77,6 @@ class FederatedMetricsTracker:
     def summary(self) -> Dict[str, Union[int, float]]:
         if not self.history:
             return {}
-        dices = [r["global_dice"] for r in self.history if r["global_dice"] is not None]
         best_round = max(self.history, key=lambda r: r.get("global_dice", 0))
         return {
             "total_rounds": len(self.history),
