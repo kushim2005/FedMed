@@ -24,7 +24,7 @@ Raw patient MRI volumes **never leave their respective hospital firewall**. The 
 
 ## 🚀 Weekly Development Progress
 
-### 🌟 Week 1 Milestone (August 26 – September 2, 2026)
+### 🌟 Week 1 Milestone 
 * **3D U-Net Model (Chaitanya):** Built high-performance 3D U-Net with MONAI, Automatic Mixed Precision (AMP), and 3D Instance Normalization for 4-channel MRI scans (T1, T1ce, T2, FLAIR).
 * **Data Pipeline (Ranjith Kumar):** Implemented a 10-step MONAI preprocessing transform pipeline (loading, reorientation to RAS, 1mm isotropic resampling, intensity normalization, foreground cropping).
 * **FL Server Scaffolding (Kushi):** Deployed initial Flower (`flwr`) server using the FedProx strategy.
@@ -33,7 +33,7 @@ Raw patient MRI volumes **never leave their respective hospital firewall**. The 
 
 ---
 
-### 🌟 Week 2 Milestone (September 3 – September 23, 2026)
+### 🌟 Week 2 Milestone
 * **Dirichlet Non-IID Partitioning (Ravi):** Designed and implemented `data/partition.py` using a Dirichlet distribution $\text{Dir}(\alpha=0.8)$ to simulate realistic cross-silo institutional data heterogeneity across the 3 hospitals.
 * **End-to-End TLS Encryption (Kushi & Vasu Sree):** Implemented `security/generate_certs.py` and `security/tls_config.py` using Python `cryptography` to generate an X.509 Root Certificate Authority (CA), server certificate, and client certificates for encrypted gRPC traffic.
 * **Enhanced FL Server V2 (Kushi):** Implemented `server/fl_server_v2.py` with TLS support, configurable **FedProx** ($\mu=0.1$) & **FedAvg**, model checkpoint saving every 5 rounds, and a `/health` HTTP probe endpoint on port 8090.
