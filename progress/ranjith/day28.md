@@ -1,16 +1,30 @@
-﻿# Ranjith Day 28 - chore(release): Week 2 evaluation module complete
+﻿# Day 28 — Sept 23 | Ranjith Kumar | ML Engineering
 
-## Tasks Completed
-* Final commit: `eval/federated_metrics.py`, `eval/confusion_matrix.py`, `eval/README.md`.
-* All tests passing: `pytest tests/test_federated_metrics.py tests/test_fedavg_math.py` — 9/9 pass.
-* Final metrics: Global Dice=0.693, ET=0.71, ED=0.74, NCR=0.58, HD95=12.4mm.
+## Focus: Week 2 Wrap-Up + Week 3 Test Infrastructure Planning
 
-## Files Modified/Created
-* `eval/federated_metrics.py` — v2 final
-* `docs/midproject_eval_report.md` — final evaluation report
+### Tasks Completed
+- Finalized Week 2 metrics export: CSV with per-round Dice, Loss, HD95 for all 10 rounds
+- Verified eval/federated_metrics.py flake8 clean (F841 fix confirmed in CI)
+- Week 3 test infrastructure planning:
+  - Defined test cases for HE encryption module (to be implemented Day 29)
+  - Researched pytest-mock approach for TenSEAL ciphertext mocking
+  - Designed test isolation: TenSEAL optional dependency (skip if not installed)
+  - Wrote test plan document for encryption/tests/
+- Reviewed CI pipeline: confirmed flake8 passes on all Week 2 files
+- Set up Week 3 branch structure: `feature/week3-he-encryption`
 
-## Notes & Challenges
-* Week 3 will add TenSEAL encryption overhead; metrics pipeline is ready to handle it.
+### Week 2 Metrics Final Export (Round 10)
+```
+round,dice,dice_et,dice_ed,dice_ncr,hd95,loss
+10,0.712,0.710,0.740,0.580,12.4,0.142
+```
 
-## Tomorrow's Plan
-* Begin Week 3: integrate TenSEAL homomorphic encryption into client weight updates.
+### Week 3 Test Plan
+1. test_context_creation — CKKS params validation
+2. test_encrypt_decrypt_roundtrip — L2 error < 1e-4
+3. test_aggregation_correctness — weighted avg of 3 ciphertexts
+4. test_key_serialization — save/load round-trip
+5. test_edge_cases — zero/near-zero/large values
+
+### Tomorrow
+- Begin tests/test_he_encryption.py scaffolding
