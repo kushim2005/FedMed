@@ -92,7 +92,7 @@ flowchart LR
 
 ## Week-by-Week Breakdown
 
-### 📅 Week 1 — Aug 26–Sep 2 | Data Pipeline + 3D U-Net
+### 📅 Week 1 | Data Pipeline + 3D U-Net
 
 **Focus:** Build the foundational federated learning infrastructure from scratch.
 
@@ -108,7 +108,7 @@ flowchart LR
 
 ---
 
-### 📅 Week 2 — Sep 3–Sep 22 | TLS Security + FedProx
+### 📅 Week 2  | TLS Security + FedProx
 
 **Focus:** Production-grade security and convergence improvements.
 
@@ -125,7 +125,7 @@ flowchart LR
 
 ---
 
-### 📅 Week 3 — Sep 23–Sep 27 | Homomorphic Encryption
+### 📅 Week 3 | Homomorphic Encryption
 
 **Focus:** Encrypt model weights so the server aggregates without ever seeing plaintext.
 
@@ -144,7 +144,7 @@ flowchart LR
 
 ---
 
-### 📅 Week 4 — Sep 28–Sep 30 | DP-SGD + React Dashboard
+### 📅 Week 4 | DP-SGD + React Dashboard
 
 **Focus:** Add formal differential privacy guarantees and a professional live dashboard.
 
