@@ -1,30 +1,38 @@
+﻿# Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-env/
-venv/
-dist/
-build/
 *.pyc
+*.pyo
+.venv/
+venv/
+.env
+
+# Data (large BraTS dataset)
 data/raw/
-data/brats/
-*.nii
+data/processed/
 *.nii.gz
-*.dcm
-*.tar
-*.zip
-*.pth
-*.ckpt
-*.pt
+
+# Keys / certificates (never commit!)
+keys/
+*.pem
+*.key
+*.crt
+*.tenseal
+
+# Training artifacts
 checkpoints/
-logs/*.log
+logs/*.csv
+logs/*.json
+
+# Node / Dashboard
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.vite/
+
+# IDE
 .vscode/
 .idea/
+*.swp
+
+# OS
 .DS_Store
 Thumbs.db
-.ipynb_checkpoints/
-*.ipynb
-.env
-*.key
-"archive (7)/"
