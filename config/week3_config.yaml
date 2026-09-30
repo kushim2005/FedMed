@@ -1,0 +1,68 @@
+# Week 3 Configuration — Homomorphic Encryption
+# FedMed: Cross-Silo Federated Learning with CKKS HE
+
+federated_learning:
+  rounds: 10
+  min_clients: 2
+  server_address: "[::]:8080"
+  strategy: fedprox
+  proximal_mu: 0.01
+  fraction_fit: 1.0
+  fraction_evaluate: 1.0
+
+homomorphic_encryption:
+  enabled: true
+  scheme: ckks
+  poly_mod_degree: 8192
+  coeff_mod_bit_sizes: [60, 40, 40, 60]
+  global_scale_bits: 40
+  security_level_bits: 128
+  context_path: "keys/ckks_context.tenseal"
+  public_key_path: "keys/ckks_public.tenseal"
+
+clients:
+  local_epochs: 2
+  batch_size: 2
+  learning_rate: 0.0001
+  optimizer: adam
+  device: cpu
+  weight_serialization: sorted_state_dict  # canonical key ordering
+
+hospitals:
+  - id: aiims_delhi
+    data_dir: data/raw/hospital_0
+    flag: IN
+  - id: mayo_clinic
+    data_dir: data/raw/hospital_1
+    flag: US
+  - id: nhs_london
+    data_dir: data/raw/hospital_2
+    flag: GB
+
+model:
+  architecture: fedmed3dunet
+  in_channels: 4
+  out_channels: 4
+  features: [32, 64, 128, 256]
+  dropout: 0.1
+
+data:
+  partitioning: dirichlet
+  alpha: 0.8
+  seed: 42
+
+logging:
+  level: INFO
+  log_dir: logs/week3
+  metrics_csv: logs/week3/he_metrics.csv
+  checkpoint_dir: checkpoints/week3
+
+expected_results:
+  dice_overall: 0.691
+  dice_et: 0.698
+  dice_ed: 0.726
+  dice_ncr: 0.569
+  hd95_mm: 13.8
+  round_time_seconds: 18.6
+  ckks_approx_error: 3.2e-5
+  security: IND-CPA 128-bit RLWE
