@@ -28,6 +28,13 @@ try:
 except ImportError:
     FASTAPI_AVAILABLE = False
 
+try:
+    from flask import Flask, jsonify
+    from flask_cors import CORS
+    FLASK_AVAILABLE = True
+except ImportError:
+    FLASK_AVAILABLE = False
+
 METRICS_CSV = os.environ.get("METRICS_CSV", "logs/week4/dp_metrics.csv")
 PRIVACY_CSV = os.environ.get("PRIVACY_CSV", "logs/week4/privacy_budget.csv")
 API_PORT = int(os.environ.get("API_PORT", "8000"))
@@ -106,8 +113,11 @@ def load_metrics_from_csv(path: str) -> List[dict]:
         with open(path, newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                rows.append({k: float(v) if v.replace(".", "").isdigit()
-                              else v for k, v in row.items()})
+                parsed_row = {
+                    k: float(v) if v.replace(".", "").isdigit() else v
+                    for k, v in row.items()
+                }
+                rows.append(parsed_row)
     except Exception:
         return DEMO_METRICS
 
@@ -180,10 +190,46 @@ else:
     app = None
 
 
-if __name__ == "__main__":
-    if not FASTAPI_AVAILABLE:
-        raise ImportError("FastAPI required: pip install fastapi uvicorn")
+def run_flask():
+    """Run Flask server when FastAPI is not available."""
+    flask_app = Flask("fedmed_metrics")
+    CORS(flask_app, origins=CORS_ORIGINS)
 
-    import uvicorn
+    @flask_app.route("/api/health")
+    def health():
+        return jsonify({"status": "healthy", "service": "fedmed-api", "version": "1.0.0"})
+
+    @flask_app.route("/api/metrics")
+    def metrics():
+        return jsonify(load_metrics_from_csv(METRICS_CSV))
+
+    @flask_app.route("/api/hospitals")
+    def hospitals():
+        return jsonify(DEMO_HOSPITALS)
+
+    @flask_app.route("/api/privacy")
+    def privacy():
+        return jsonify(load_privacy_from_csv(PRIVACY_CSV))
+
+    @flask_app.route("/")
+    def root():
+        return jsonify({
+            "name": "FedMed Metrics API",
+            "endpoints": ["/api/metrics", "/api/hospitals", "/api/privacy", "/api/health"],
+        })
+
     print(f"Starting FedMed Metrics API on port {API_PORT}...")
-    uvicorn.run("api.metrics_server:app", host="0.0.0.0", port=API_PORT, reload=False)
+    flask_app.run(host="0.0.0.0", port=API_PORT, debug=False)
+
+
+if __name__ == "__main__":
+    if FASTAPI_AVAILABLE:
+        import uvicorn
+        print(f"Starting FedMed Metrics API on port {API_PORT}...")
+        uvicorn.run("api.metrics_server:app", host="0.0.0.0", port=API_PORT, reload=False)
+    elif FLASK_AVAILABLE:
+        run_flask()
+    else:
+        raise ImportError(
+            "FastAPI or Flask required: pip install fastapi uvicorn OR pip install flask flask-cors"
+        )
