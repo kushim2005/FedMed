@@ -1,0 +1,79 @@
+# Week 4 Configuration — Differential Privacy + Dashboard
+# FedMed: Cross-Silo Federated Learning with DP-SGD
+
+federated_learning:
+  rounds: 10
+  min_clients: 2
+  server_address: "[::]:8080"
+  strategy: fedprox
+  proximal_mu: 0.01
+  fraction_fit: 1.0
+  fraction_evaluate: 1.0
+
+differential_privacy:
+  enabled: true
+  noise_multiplier: 1.1      # σ — Gaussian noise scale
+  max_grad_norm: 1.0         # C — per-sample clipping bound
+  delta: 1.0e-5              # δ — privacy failure probability
+  max_epsilon: 3.5           # budget cap — stop training if exceeded
+  accountant: rdp            # Rényi DP accounting (Opacus)
+  target_epsilon: 2.79       # expected ε after 10 rounds
+  poisson_sampling: true     # amplification by subsampling
+
+clients:
+  local_epochs: 2
+  batch_size: 2
+  learning_rate: 0.0001
+  optimizer: adam
+  device: cpu
+
+hospitals:
+  - id: aiims_delhi
+    data_dir: data/raw/hospital_0
+    samples: 187
+    flag: IN
+  - id: mayo_clinic
+    data_dir: data/raw/hospital_1
+    samples: 224
+    flag: US
+  - id: nhs_london
+    data_dir: data/raw/hospital_2
+    samples: 163
+    flag: GB
+
+model:
+  architecture: fedmed3dunet
+  in_channels: 4
+  out_channels: 4
+  features: [32, 64, 128, 256]
+  dropout: 0.1
+
+data:
+  partitioning: dirichlet
+  alpha: 0.8
+  seed: 42
+
+dashboard:
+  enabled: true
+  port: 3000
+  api_port: 8000
+  poll_interval_seconds: 5
+  api_base_url: "http://localhost:8000"
+  theme: dark
+
+logging:
+  level: INFO
+  log_dir: logs/week4
+  metrics_csv: logs/week4/dp_metrics.csv
+  privacy_csv: logs/week4/privacy_budget.csv
+  checkpoint_dir: checkpoints/week4
+
+expected_results:
+  dice_overall: 0.683
+  dice_et: 0.672
+  dice_ed: 0.715
+  dice_ncr: 0.556
+  hd95_mm: 14.2
+  epsilon_final: 2.79
+  delta: 1.0e-5
+  budget_used_pct: 79.7
